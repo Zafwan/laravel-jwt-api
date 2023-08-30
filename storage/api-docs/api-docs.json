@@ -7,6 +7,9 @@
     "paths": {
         "/api/auth/register": {
             "post": {
+                "tags": [
+                    "Authentication"
+                ],
                 "summary": "Register a new user",
                 "operationId": "d764dd091cc4494ae0baf360b03319f3",
                 "parameters": [
@@ -59,6 +62,9 @@
         },
         "/api/auth/login": {
             "post": {
+                "tags": [
+                    "Authentication"
+                ],
                 "summary": "Authenticate user and generate JWT token",
                 "operationId": "8dcb70df1020986038d098cc08d05dae",
                 "parameters": [
@@ -92,9 +98,12 @@
             }
         },
         "/api/auth/me": {
-            "get": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
                 "summary": "Get logged-in user details",
-                "operationId": "b9abb1a7a74670a19c215c2c133f14d8",
+                "operationId": "f0b15943f55143d36f606a2dbd1d2366",
                 "responses": {
                     "200": {
                         "description": "Success"
@@ -109,6 +118,9 @@
         },
         "/api/auth/logout": {
             "post": {
+                "tags": [
+                    "Authentication"
+                ],
                 "summary": "Log the user out (Invalidate the token)",
                 "operationId": "69281b12abb272c76871f19cb17ca563",
                 "responses": {
@@ -125,6 +137,9 @@
         },
         "/api/auth/refresh": {
             "post": {
+                "tags": [
+                    "Authentication"
+                ],
                 "summary": "Refresh the token",
                 "operationId": "b2eae7a8032954d25b46c7ec6f489c68",
                 "responses": {

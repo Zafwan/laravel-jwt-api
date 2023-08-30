@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Tymon\JWTAuth\JWT;
 use Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Controllers\API\BaseController as BaseController;
@@ -21,9 +22,17 @@ class AuthController extends BaseController
     }
 
     /**
+     * @OA\Tag(
+     *     name="Authentication",
+     *     description="Endpoints related to user authentication"
+     * )
+     */
+
+    /**
      * @OA\Post(
      *     path="/api/auth/register",
      *     summary="Register a new user",
+     *     tags={"Authentication"},
      *     @OA\Parameter(
      *         name="name",
      *         in="query",
@@ -56,12 +65,6 @@ class AuthController extends BaseController
      *     @OA\Response(response="422", description="Validation errors")
      * )
      */
-
-    // /**
-    //  * Register a User.
-    //  *
-    //  * @return \Illuminate\Http\JsonResponse
-    //  */
     public function register()
     {
         $validator = Validator::make(request()->all(), [
@@ -86,33 +89,35 @@ class AuthController extends BaseController
     }
 
     /**
-         * @OA\Post(
-         *     path="/api/auth/login",
-         *     summary="Authenticate user and generate JWT token",
-         *     @OA\Parameter(
-         *         name="email",
-         *         in="query",
-         *         description="User's email",
-         *         required=true,
-         *         @OA\Schema(type="string")
-         *     ),
-         *     @OA\Parameter(
-         *         name="password",
-         *         in="query",
-         *         description="User's password",
-         *         required=true,
-         *         @OA\Schema(type="string")
-         *     ),
-         *     @OA\Response(response="200", description="Login successful"),
-         *     @OA\Response(response="401", description="Invalid credentials")
-         * )
-         *
+     * @OA\Tag(
+     *     name="Authentication",
+     *     description="Endpoints related to user authentication"
+     * )
+     */
 
-        // /**
-        //  * Get a JWT via given credentials.
-        //  *
-        //  * @return \Illuminate\Http\JsonResponse
-        //  */
+    /**
+     * @OA\Post(
+     *     path="/api/auth/login",
+     *     summary="Authenticate user and generate JWT token",
+     *     tags={"Authentication"},
+     *     @OA\Parameter(
+     *         name="email",
+     *         in="query",
+     *         description="User's email",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="password",
+     *         in="query",
+     *         description="User's password",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(response="200", description="Login successful"),
+     *     @OA\Response(response="401", description="Invalid credentials")
+     * )
+     */
     public function login()
     {
         //old code
@@ -138,40 +143,45 @@ class AuthController extends BaseController
     }
 
     /**
-     * @OA\Get(
+     * @OA\Tag(
+     *     name="Authentication",
+     *     description="Endpoints related to user authentication"
+     * )
+     */
+
+    /**
+     * @OA\Post(
      *     path="/api/auth/me",
      *     summary="Get logged-in user details",
+     *     tags={"Authentication"},
      *     @OA\Response(response="200", description="Success"),
      *     security={{"bearerAuth":{}}}
      * )
      */
-
-    // /**
-    //  * Get the authenticated User.
-    //  *
-    //  * @return \Illuminate\Http\JsonResponse
-    //  */
     public function me()
     {
-        $data = response()->json(auth()->user());
+        $user = auth()->user();
+        $data = response()->json($user);
 
         return $this->sendResponse($data, 'Login User Retrieved Successfully');
     }
 
     /**
+     * @OA\Tag(
+     *     name="Authentication",
+     *     description="Endpoints related to user authentication"
+     * )
+     */
+
+    /**
      * @OA\Post(
      *     path="/api/auth/logout",
      *     summary="Log the user out (Invalidate the token)",
+     *     tags={"Authentication"},
      *     @OA\Response(response="200", description="Success"),
      *     security={{"bearerAuth":{}}}
      * )
      */
-
-    // /**
-    //  * Log the user out (Invalidate the token).
-    //  *
-    //  * @return \Illuminate\Http\JsonResponse
-    //  */
     public function logout()
     {
         auth()->logout();
@@ -182,19 +192,21 @@ class AuthController extends BaseController
     }
 
     /**
+     * @OA\Tag(
+     *     name="Authentication",
+     *     description="Endpoints related to user authentication"
+     * )
+     */
+
+    /**
      * @OA\Post(
      *     path="/api/auth/refresh",
      *     summary="Refresh the token",
+     *     tags={"Authentication"},
      *     @OA\Response(response="200", description="Success"),
      *     security={{"bearerAuth":{}}}
      * )
      */
-
-    // /**
-    //  * Refresh a token.
-    //  *
-    //  * @return \Illuminate\Http\JsonResponse
-    //  */
     public function refresh()
     {
         return $this->respondWithToken(auth()->refresh());
