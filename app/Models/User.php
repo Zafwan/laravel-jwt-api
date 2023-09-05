@@ -18,7 +18,9 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name',
+        'email',
+        'password',
     ];
 
     /**
@@ -27,7 +29,8 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
 
     /**
@@ -48,7 +51,7 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->getKey();
     }
- 
+
     /**
      * Return a key value array, containing any custom claims to be added to the JWT.
      *
@@ -57,5 +60,13 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    /**
+     * Get the blogs.
+     */
+    public function blogs()
+    {
+        return $this->hasMany(Blog::class);
     }
 }

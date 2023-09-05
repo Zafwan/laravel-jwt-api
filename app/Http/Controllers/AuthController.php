@@ -33,36 +33,19 @@ class AuthController extends BaseController
      *     path="/api/auth/register",
      *     summary="Register a new user",
      *     tags={"Authentication"},
-     *     @OA\Parameter(
-     *         name="name",
-     *         in="query",
-     *         description="User's name",
-     *         required=true,
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="email",
-     *         in="query",
-     *         description="User's email",
-     *         required=true,
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="password",
-     *         in="query",
-     *         description="User's password",
-     *         required=true,
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="password_confirmation",
-     *         in="query",
-     *         description="Password confirmation",
-     *         required=true,
-     *         @OA\Schema(type="string")
-     *     ),
+     *      @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(
+     *              type="object",
+     *              required={"name","email","password","password_confirmation"},
+     *              @OA\Property(property="name", type="string", example="David Beckham"),
+     *              @OA\Property(property="email", type="email", example="beckham@gmail.com"),
+     *              @OA\Property(property="password", type="string", example="passBeckhamBall001"),
+     *              @OA\Property(property="password_confirmation", type="string", example="passBeckhamBall001")
+     *          ),
+     *      ),
      *     @OA\Response(response="201", description="User registered successfully"),
-     *     @OA\Response(response="422", description="Validation errors")
+     *     @OA\Response(response="422", description="Validation error")
      * )
      */
     public function register()
@@ -100,20 +83,15 @@ class AuthController extends BaseController
      *     path="/api/auth/login",
      *     summary="Authenticate user and generate JWT token",
      *     tags={"Authentication"},
-     *     @OA\Parameter(
-     *         name="email",
-     *         in="query",
-     *         description="User's email",
-     *         required=true,
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="password",
-     *         in="query",
-     *         description="User's password",
-     *         required=true,
-     *         @OA\Schema(type="string")
-     *     ),
+     *      @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(
+     *              type="object",
+     *              required={"email","password"},
+     *              @OA\Property(property="email", type="email", example="beckham@gmail.com"),
+     *              @OA\Property(property="password", type="string", example="passBeckhamBall001")
+     *          ),
+     *      ),
      *     @OA\Response(response="200", description="Login successful"),
      *     @OA\Response(response="401", description="Invalid credentials")
      * )
@@ -155,6 +133,7 @@ class AuthController extends BaseController
      *     summary="Get logged-in user details",
      *     tags={"Authentication"},
      *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="405", description="Method not allowed (Due to invalid token or expired token)"),
      *     security={{"bearerAuth":{}}}
      * )
      */
@@ -179,6 +158,7 @@ class AuthController extends BaseController
      *     summary="Log the user out (Invalidate the token)",
      *     tags={"Authentication"},
      *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="405", description="Method not allowed (Due to invalid token or expired token)"),
      *     security={{"bearerAuth":{}}}
      * )
      */
@@ -204,6 +184,7 @@ class AuthController extends BaseController
      *     summary="Refresh the token",
      *     tags={"Authentication"},
      *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="405", description="Method not allowed (Due to invalid token or expired token)"),
      *     security={{"bearerAuth":{}}}
      * )
      */
