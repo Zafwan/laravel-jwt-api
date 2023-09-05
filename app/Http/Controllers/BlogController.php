@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Blog;
 use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Support\Facades\Validator;
+use OpenApi\Annotations as OA;
 
 class BlogController extends BaseController
 {
@@ -20,13 +21,26 @@ class BlogController extends BaseController
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @OA\Tag(
+     *     name="Blog",
+     *     description="Endpoints related to blogs"
+     * )
+     */
+
+    /**
+     * @OA\Get(
+     *     path="/api/blog/blogs",
+     *     summary="Get all blogs for authenticated user",
+     *     tags={"Blog"},
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="405", description="Method not allowed (Due to token invalid or expired)"),
+     *     security={{"bearerAuth":{}}}
+     * )
      */
     public function index()
     {
-        $blogs = Blog::latest()->paginate(10);
+        $user = auth()->user()->id;
+        $blogs = Blog::with('user')->where('user_id', $user)->latest()->paginate(10);
 
         return $this->sendResponse($blogs, 'Blogs Retrieved Successfully.');
     }
@@ -42,17 +56,38 @@ class BlogController extends BaseController
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @OA\Tag(
+     *     name="Blog",
+     *     description="Endpoints related to blogs"
+     * )
+     */
+
+    /**
+     * @OA\Post(
+     *     path="/api/blog/blogs",
+     *     summary="Create a new blog",
+     *     tags={"Blog"},
+     *     security={{"bearerAuth":{}}},
+     *      @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(
+     *              type="object",
+     *              required={"title"},
+     *              @OA\Property(property="title", type="string", example="How to mengulor"),
+     *              @OA\Property(property="body", type="text", example="First, go make coffee"),
+     *          ),
+     *      ),
+     *     @OA\Response(response="201", description="Blog created successfully"),
+     *     @OA\Response(response="422", description="Validation error"),
+     *     @OA\Response(response="405", description="Method not allowed (Due to token invalid or expired)"),
+     * )
      */
     public function store(Request $request)
     {
         // Validate the incoming request data
         $validator = Validator::make($request->all(), [
-            'title' => 'required',
-            'body' => 'required',
+            'title' => 'required|string|max:50',
+            'body' => 'nullable',
         ]);
 
         // Check if the validation fails
@@ -61,19 +96,45 @@ class BlogController extends BaseController
             return $this->sendValidationError('Validation Error', $validator->errors());
         }
 
-        $blog = Blog::create($request->all());
-        return $this->sendResponse($blog, 'New Blog Created Successfully.');
+        $blog = Blog::create([
+            'title' => $request->title,
+            'body' => $request->body,
+            'user_id' => auth()->user()->id
+        ]);
+        return $this->sendResponseCreate($blog, 'New Blog Created Successfully.');
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @OA\Tag(
+     *     name="Blog",
+     *     description="Endpoints related to blogs"
+     * )
+     */
+
+    /**
+     * @OA\Get(
+     *     path="/api/blog/blogs/{id}",
+     *     summary="Get specific blog by id for authenticated user",
+     *     tags={"Blog"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the record",
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="404", description="Not found"),
+     *     @OA\Response(response="405", description="Method not allowed (Due to token invalid or expired)"),
+     * )
      */
     public function show($id)
     {
-        $blog = Blog::find($id);
+        $user = auth()->user()->id;
+        $blog = Blog::where('user_id', $user)->find($id);
 
         if (is_null($blog)) {
             return $this->sendError('Blog not found');
@@ -94,26 +155,71 @@ class BlogController extends BaseController
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @OA\Tag(
+     *     name="Blog",
+     *     description="Endpoints related to blogs"
+     * )
+     */
+
+    /**
+     * @OA\Put(
+     *      path="/api/blog/blogs/{id}",
+     *      summary="Update blog by id",
+     *      tags={"Blog"},
+     *      security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the record",
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *      @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(
+     *              type="object",
+     *              required={"title"},
+     *              @OA\Property(property="title", type="string", example="How to pura-pura busy"),
+     *              @OA\Property(property="body", type="text", example="Open as many terminals as possible"),
+     *          ),
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *      ),
+     *      @OA\Response(
+     *          response=422,
+     *          description="Validation error",
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Not found",
+     *      ),
+     *      @OA\Response(response="405", description="Method not allowed (Due to token invalid or expired)"),
+     * )
      */
     public function update(Request $request, $id)
     {
+        $user = auth()->user()->id;
         $input = $request->all();
 
         $validator = Validator::make($input, [
-            'title' => 'required',
-            'body' => 'required'
+            'title' => 'required|string|max:50',
+            'body' => 'nullable'
         ]);
 
         if ($validator->fails()) {
             return $this->sendValidationError('Validation Error', $validator->errors());
         }
 
-        $blog = Blog::find($id);
+        $blog = Blog::where('user_id', $user)->find($id);
+
+        if (is_null($blog)) {
+            return $this->sendError('Blog not found');
+        }
+
         $blog->title = $input['title'];
         $blog->body = $input['body'];
         $blog->save();
@@ -122,14 +228,42 @@ class BlogController extends BaseController
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @OA\Tag(
+     *     name="Blog",
+     *     description="Endpoints related to blogs"
+     * )
+     */
+
+    /**
+     * @OA\Delete(
+     *      path="/api/blog/blogs/{id}",
+     *      summary="Delete blog by id",
+     *      tags={"Blog"},
+     *      security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the record",
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Not found",
+     *      ),
+     *      @OA\Response(response="405", description="Method not allowed (Due to token invalid or expired)"),
+     * )
      */
     public function destroy($id)
     {
-        $blog = Blog::find($id);
+        $user = auth()->user()->id;
+        $blog = Blog::where('user_id', $user)->find($id);
 
         if (is_null($blog)) {
             return $this->sendError('Blog not found');
