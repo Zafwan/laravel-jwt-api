@@ -1,0 +1,40 @@
+body {
+    background: url("/img/space-bg.svg") no-repeat fixed center;
+    background-size: cover;
+}
+
+img.astronaut {
+    width: 500px;
+}
+
+.center-both {
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Optional, sets the height of the container to the viewport height */
+    position: relative; /* Add this to make the positioning relative to this container */
+}
+
+h1.link,
+a.link {
+    color: white;
+    position: absolute; /* Add this to position the link absolutely inside the container */
+    top: 55%; /* Position it in the vertical center */
+    left: 50%; /* Position it in the horizontal center */
+    transform: translate(-50%, -50%); /* Center it precisely */
+    font-size: 20px;
+    text-decoration: none;
+    font-family: "Roboto", sans-serif;
+}
+
+a.link:hover {
+    background: transparent;
+}
+
+h2.cta {
+    padding: 10px;
+    background: green;
+    border-radius: 10px;
+}
