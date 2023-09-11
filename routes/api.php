@@ -37,4 +37,5 @@ Route::group(['middleware' => 'api', 'prefix' => 'auth'], function ($router) {
 //Blog route
 Route::group(['middleware' => 'api', 'prefix' => 'blog'], function ($router) {
     Route::resource('blogs', BlogController::class);
+    Route::post('/blog-bulk-insert', [BlogController::class, 'blogBulkInsert']);
 });
