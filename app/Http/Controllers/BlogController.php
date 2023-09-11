@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BlogBulkInsert;
 use Illuminate\Http\Request;
 use App\Models\Blog;
 use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Support\Facades\Validator;
 use OpenApi\Annotations as OA;
+use Redirect, Response, File;
 
 class BlogController extends BaseController
 {
@@ -272,5 +274,36 @@ class BlogController extends BaseController
         $blog->delete();
 
         return $this->sendResponse($blog, 'Blog Deleted Successfully.');
+    }
+
+    //File upload
+    public function blogBulkInsert(Request $request)
+    {
+        $user = auth()->user()->id;
+
+        $validator = Validator::make($request->all(), [
+            'file_name' => 'required|mimes:csv,txt|max:8192'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendValidationError('Validation Error', $validator->errors());
+        }
+
+        if ($file = $request->file('file_name')) {
+            $file_name = $file->getClientOriginalName();
+            $file->move(storage_path('app/blogBulkInsert'), $file_name);
+
+            $blogBulkInsert = BlogBulkInsert::create([
+                'user_id' => $user,
+                'file_name' => $file_name
+            ]);
+
+            $file_id = $blogBulkInsert->id;
+
+            \App\Jobs\BlogBulkInsert::dispatch($user, $file_name, $file_id);
+            // \App\Jobs\BlogBulkInsert::dispatchAfterResponse($user, $file_name, $file_id);
+
+            return $this->sendResponse($blogBulkInsert, 'Uploaded Successfully');
+        }
     }
 }
