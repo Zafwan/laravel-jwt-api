@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Blog extends Model
+class Comment extends Model
 {
     use HasFactory;
 
     protected $guarded = ['id'];
 
     /**
-     * Get the user that owns the blog.
+     * Get the user that owns the comment.
      */
     public function user()
     {
@@ -20,10 +20,10 @@ class Blog extends Model
     }
 
     /**
-     * Get the comments.
+     * Get the blog that owns the comment.
      */
-    public function comments()
+    public function blog()
     {
-        return $this->hasMany(Comment::class);
+        return $this->belongsTo(Blog::class);
     }
 }

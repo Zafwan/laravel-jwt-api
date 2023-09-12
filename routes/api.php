@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BlogController;
@@ -38,4 +39,9 @@ Route::group(['middleware' => 'api', 'prefix' => 'auth'], function ($router) {
 Route::group(['middleware' => 'api', 'prefix' => 'blog'], function ($router) {
     Route::resource('blogs', BlogController::class);
     Route::post('/blog-bulk-insert', [BlogController::class, 'blogBulkInsert']);
+});
+
+//Comment route
+Route::group(['middleware' => 'api', 'prefix' => 'comment'], function ($router) {
+    Route::resource('comments', CommentController::class);
 });

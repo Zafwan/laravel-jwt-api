@@ -276,7 +276,46 @@ class BlogController extends BaseController
         return $this->sendResponse($blog, 'Blog Deleted Successfully.');
     }
 
-    //File upload
+    /**
+     * @OA\Tag(
+     *     name="Blog",
+     *     description="Endpoints related to blogs"
+     * )
+     */
+
+    /**
+     * @OA\Post(
+     *     path="/api/blog/blog-bulk-insert",
+     *     summary="Bulk create new blog from csv file",
+     *     tags={"Blog"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="file_name",
+     *                     type="file",
+     *                     description="The file to upload"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="File uploaded successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *     ),
+     *     @OA\Response(
+     *         response=405,
+     *         description="Method not allowed (Due to token invalid or expired)",
+     *     )
+     * )
+     */
     public function blogBulkInsert(Request $request)
     {
         $user = auth()->user()->id;
