@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\RoleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BlogController;
@@ -44,4 +46,14 @@ Route::group(['middleware' => 'api', 'prefix' => 'blog'], function ($router) {
 //Comment route
 Route::group(['middleware' => 'api', 'prefix' => 'comment'], function ($router) {
     Route::resource('comments', CommentController::class);
+});
+
+//Role route
+Route::group(['middleware' => 'api', 'prefix' => 'role'], function ($router) {
+    Route::resource('roles', RoleController::class);
+});
+
+//Permission route
+Route::group(['middleware' => 'api', 'prefix' => 'permission'], function ($router) {
+    Route::resource('permissions', PermissionController::class);
 });

@@ -567,6 +567,400 @@
                     }
                 ]
             }
+        },
+        "/api/permission/permissions": {
+            "get": {
+                "tags": [
+                    "Permission"
+                ],
+                "summary": "Get all permissions",
+                "operationId": "f33de4eafa07aca0527516fec3266c73",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "405": {
+                        "description": "Method not allowed (Due to token invalid or expired)"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Permission"
+                ],
+                "summary": "Create a new permission",
+                "operationId": "663461e3d85e67357d199f77d56b8b52",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "create-role"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Permission created successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "405": {
+                        "description": "Method not allowed (Due to token invalid or expired)"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/permission/permissions/{id}": {
+            "get": {
+                "tags": [
+                    "Permission"
+                ],
+                "summary": "Get specific permission by id",
+                "operationId": "60926662c725da7060abfdf5561cf53c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the record",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "405": {
+                        "description": "Method not allowed (Due to token invalid or expired)"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Permission"
+                ],
+                "summary": "Update permission by id",
+                "operationId": "d3933af7f124d1c3ecfcf02beddaa149",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the record",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "create-role"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "405": {
+                        "description": "Method not allowed (Due to token invalid or expired)"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Permission"
+                ],
+                "summary": "Delete permission by id",
+                "operationId": "39d77993080c6aec47af4935d21f8a60",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the record",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "405": {
+                        "description": "Method not allowed (Due to token invalid or expired)"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/role/roles": {
+            "get": {
+                "tags": [
+                    "Role"
+                ],
+                "summary": "Get all roles",
+                "operationId": "7ca164b2608429a682f49adfd9642370",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "405": {
+                        "description": "Method not allowed (Due to token invalid or expired)"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Role"
+                ],
+                "summary": "Create a new role",
+                "operationId": "b70a32cc393baa6ed3fd4a8836ef0bda",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Admin"
+                                    },
+                                    "permission_id": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "example": "1"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Role created successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "405": {
+                        "description": "Method not allowed (Due to token invalid or expired)"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/role/roles/{id}": {
+            "get": {
+                "tags": [
+                    "Role"
+                ],
+                "summary": "Get specific role by id",
+                "operationId": "04e18c621bc9cccc9ccd8bf91d73e5f8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the record",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "405": {
+                        "description": "Method not allowed (Due to token invalid or expired)"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Role"
+                ],
+                "summary": "Update role by id",
+                "operationId": "ecdc56dc0ebe5b9d94b59e35396bd601",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the record",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Admin"
+                                    },
+                                    "permission_id": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "example": "1,2,3"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "405": {
+                        "description": "Method not allowed (Due to token invalid or expired)"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Role"
+                ],
+                "summary": "Delete role by id",
+                "operationId": "8bf34b2ccfc8e64977ea497ccf7a6ebc",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the record",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "405": {
+                        "description": "Method not allowed (Due to token invalid or expired)"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
