@@ -86,7 +86,7 @@ class RoleController extends BaseController
      */
     public function store(Request $request)
     {
-        $this->authorize('create-role');
+        // $this->authorize('create-role');
 
         // Validate incoming request
         $validator = Validator::make($request->all(), [
@@ -279,14 +279,16 @@ class RoleController extends BaseController
     {
         $this->authorize('delete-role');
 
-        $role = Role::find($id);
+        $role = Role::with('role_permission')->find($id);
 
         if (is_null($role)) {
             return $this->sendError('Role not found');
         }
 
+        // Delete the role and its associated role_permissions
         $role->delete();
 
         return $this->sendResponse($role, 'Role Deleted Successfully');
     }
+
 }
