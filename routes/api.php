@@ -1,8 +1,12 @@
 <?php
 
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\CommitmentController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\Spending\MonthController;
+use App\Http\Controllers\Spending\SpendingController;
+use App\Http\Controllers\Spending\YearController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BlogController;
@@ -56,4 +60,16 @@ Route::group(['middleware' => 'api', 'prefix' => 'role'], function ($router) {
 //Permission route
 Route::group(['middleware' => 'api', 'prefix' => 'permission'], function ($router) {
     Route::resource('permissions', PermissionController::class);
+});
+
+//Commitment route
+Route::group(['middleware' => 'api', 'prefix' => 'commitment'], function ($router) {
+    Route::resource('commitments', CommitmentController::class);
+});
+
+//Spending route
+Route::group(['middleware' => 'api', 'prefix' => 'spending'], function ($router) {
+    Route::get('/month', [MonthController::class, 'index']);
+    Route::get('/year', [YearController::class, 'index']);
+    Route::resource('spendings', SpendingController::class);
 });
